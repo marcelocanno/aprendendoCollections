@@ -2,9 +2,14 @@ package mySqlConection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.JdbcRowSet;
+import javax.sql.rowset.RowSetProvider;
 
 
 public class conexaoFactory {
@@ -19,7 +24,7 @@ public class conexaoFactory {
 	
 	public static  Connection getConexao() throws SQLException {
 		
-		String url = "jdbc:mysql://localhost:3306/agencia?useSSL=false";
+		String url = "jdbc:mysql://canno:3306/agencia?useSSL=false";
 		String user = "root";
 		String password = "satan666";
 		try {
@@ -35,7 +40,54 @@ public class conexaoFactory {
 		}
 		return null;	
 	}
+        public static  JdbcRowSet getRowSetConnetion() throws SQLException {
+		
+		String url = "jdbc:mysql://canno:3306/agencia?useSSL=false";
+		String user = "root";
+		String password = "satan666";
+		try {
+			JdbcRowSet jdbcRowSet = RowSetProvider.newFactory().createJdbcRowSet();
+			jdbcRowSet.setUrl(url);
+			jdbcRowSet.setUsername(user);
+			jdbcRowSet.setPassword(password);
+			return jdbcRowSet;
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;	
+	}
 	
+	public static JdbcRowSet getRowSetConnection() {
+		String url = "jdbc:mysql://canno:3306/agencia?useSSL=false";
+		String user = "root";
+		String password = "satan666";
+		try {
+			JdbcRowSet jdbcRowSet = RowSetProvider.newFactory().createJdbcRowSet();
+			jdbcRowSet.setUrl(url);
+			jdbcRowSet.setUsername(user);
+			jdbcRowSet.setPassword(password);
+			return jdbcRowSet;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static CachedRowSet getRowSetConnectionCached() {
+		String url = "jdbc:mysql://canno:3306/agencia?useSSL=false relaxAutocommit=true";
+		String user = "root";
+		String password = "satan666";
+		try {
+			CachedRowSet cachedRowSet =  RowSetProvider.newFactory().createCachedRowSet();
+			cachedRowSet.setUrl(url);
+			cachedRowSet.setUsername(user);
+	
+			cachedRowSet.setPassword(password);
+			return cachedRowSet;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}		
 	public void fecharConexao(Connection connection) {
 		try {
 			if(connection != null)
@@ -53,4 +105,21 @@ public class conexaoFactory {
 			e.printStackTrace();
 		}
 	}
+	public static void close(Connection connection, PreparedStatement ps) {
+		try {
+			if(connection != null)
+				connection.close();			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}	
+	}
+	public static void close(JdbcRowSet jrs) {
+		try {
+			if(jrs != null)
+				jrs.close();			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}	
+	}
+	
 }
